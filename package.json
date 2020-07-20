@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "pressure": "^2.1.2",
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "name": "drawdate",
+  "version": "1.0.0",
+  "description": "A tool for creating 1 bit art for the PlayDate console",
+  "main": "src/index.js",
+  "repository": "https://github.com/neil-morrison44/drawdate.git",
+  "author": "Neil Morrison",
+  "license": "AGPL",
+  "private": true
+}

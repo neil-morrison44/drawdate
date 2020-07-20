@@ -1,0 +1,12 @@
+version: "3"
+services:
+  node:
+    image: "node:14"
+    user: "node"
+    working_dir: /drawdate
+    volumes:
+      - .:/drawdate
+    ports:
+      - "8081:8081"
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
