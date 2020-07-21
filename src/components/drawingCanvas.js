@@ -1,5 +1,6 @@
-import React, { useRef, useLayoutEffect, useState } from "react"
-import Pressure from "pressure"
+import React, { useRef, useLayoutEffect, useState, Fragment } from "react"
+
+const PRESSURE_FACTOR = 10
 
 const DrawingCanvas = ({
   onUpdate = () => {},
@@ -9,28 +10,20 @@ const DrawingCanvas = ({
   initialImageData,
 }) => {
   const canvasRef = useRef()
-  const [currentPressure, setCurrentPressure] = useState(0.5)
   const [currentTouch, setCurrentTouch] = useState(null)
   const [boundingRect, setBoundingRect] = useState(null)
 
   useLayoutEffect(() => {
-    Pressure.set(
-      canvasRef.current,
-      {
-        change: (force) => setCurrentPressure(force),
-      },
-      { polyfill: true }
-    )
     if (!boundingRect) setBoundingRect(canvasRef.current.getBoundingClientRect())
-  })
+  }, [width, height, initialImageData])
 
   const drawDot = (x, y) => {
     const ctx = canvasRef.current.getContext("2d")
     ctx.fillRect(
-      Math.round(x - currentPressure),
-      Math.round(y - currentPressure),
-      Math.round(currentPressure * 2),
-      Math.round(currentPressure * 2)
+      Math.round(x - currentTouch.pressure),
+      Math.round(y - currentTouch.pressure),
+      Math.round(currentTouch.pressure * 2),
+      Math.round(currentTouch.pressure * 2)
     )
 
     onUpdate(ctx)
@@ -38,7 +31,10 @@ const DrawingCanvas = ({
 
   const drawLine = (x1, y1, x2, y2) => {
     const ctx = canvasRef.current.getContext("2d")
-    ctx.strokeWidth = currentPressure
+    ctx.lineWidth = currentTouch.pressure
+    ctx.lineCap = "round"
+    ctx.lineJoin = "round"
+    ctx.beginPath()
     ctx.moveTo(x1, y1)
     ctx.lineTo(x2, y2)
     ctx.stroke()
@@ -50,7 +46,11 @@ const DrawingCanvas = ({
     const stylusTouch = [...touches].find(({ touchType }) => touchType === "stylus")
     if (stylusTouch) {
       const { clientX, clientY } = stylusTouch
-      const newTouch = { x: clientX - boundingRect.left, y: clientY - boundingRect.top }
+      const newTouch = {
+        x: clientX - boundingRect.left,
+        y: clientY - boundingRect.top,
+        pressure: stylusTouch.force * PRESSURE_FACTOR,
+      }
       setCurrentTouch(newTouch)
       drawDot(newTouch.x, newTouch.y)
     }
@@ -60,7 +60,11 @@ const DrawingCanvas = ({
     const stylusTouch = [...touches].find(({ touchType }) => touchType === "stylus")
     if (stylusTouch) {
       const { clientX, clientY } = stylusTouch
-      const newTouch = { x: clientX - boundingRect.left, y: clientY - boundingRect.top }
+      const newTouch = {
+        x: clientX - boundingRect.left,
+        y: clientY - boundingRect.top,
+        pressure: stylusTouch.force * PRESSURE_FACTOR,
+      }
       drawLine(currentTouch.x, currentTouch.y, newTouch.x, newTouch.y)
       setCurrentTouch(newTouch)
     }
@@ -75,15 +79,18 @@ const DrawingCanvas = ({
     }
   }
   return (
-    <canvas
-      ref={canvasRef}
-      className="drawing-canvas"
-      width={width}
-      height={height}
-      onTouchStart={(e) => touchStart(e)}
-      onTouchMove={(e) => touchMove(e)}
-      onTouchEnd={(e) => touchEnd(e)}
-    ></canvas>
+    <Fragment>
+      <canvas
+        ref={canvasRef}
+        className="drawing-canvas"
+        width={width}
+        height={height}
+        onTouchStart={(e) => touchStart(e)}
+        onTouchMove={(e) => touchMove(e)}
+        onTouchEnd={(e) => touchEnd(e)}
+      ></canvas>
+      {currentTouch?.pressure}
+    </Fragment>
   )
 }
 

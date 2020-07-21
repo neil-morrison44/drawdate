@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "pressure": "^2.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
@@ -27,7 +26,7 @@
   "license": "AGPL",
   "private": true,
   "prettier": {
-    "printWidth": 120,
+    "printWidth": 100,
     "tabWidth": 2,
     "singleQuote": false,
     "semi": false

@@ -4033,11 +4033,6 @@ postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.32, postcss@^7.0.5, postcss@^7.0.
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-pressure@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/pressure/-/pressure-2.1.2.tgz#5a7a58b7aab90f48db283012e470c1a6f9567aef"
-  integrity sha512-ZSargPrrtyDGsWKFQvk3e5i/JM24pRTlb7Wu6RNtQiSzSAwdNw7hmB4+tQ/V2AhC3u4YGx3q2kMYEgtr/6ctXQ==
-
 pretty-error@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
