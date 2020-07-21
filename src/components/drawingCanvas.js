@@ -1,7 +1,13 @@
 import React, { useRef, useLayoutEffect, useState } from "react"
 import Pressure from "pressure"
 
-const DrawingCanvas = ({ onUpdate, width = 400, height = 240, initialView }) => {
+const DrawingCanvas = ({
+  onUpdate = () => {},
+  onFinalUpdate = () => {},
+  width = 400,
+  height = 240,
+  initialImageData,
+}) => {
   const canvasRef = useRef()
   const [currentPressure, setCurrentPressure] = useState(0.5)
   const [currentTouch, setCurrentTouch] = useState(null)
@@ -26,6 +32,8 @@ const DrawingCanvas = ({ onUpdate, width = 400, height = 240, initialView }) => 
       Math.round(currentPressure * 2),
       Math.round(currentPressure * 2)
     )
+
+    onUpdate(ctx)
   }
 
   const drawLine = (x1, y1, x2, y2) => {
@@ -34,6 +42,8 @@ const DrawingCanvas = ({ onUpdate, width = 400, height = 240, initialView }) => 
     ctx.moveTo(x1, y1)
     ctx.lineTo(x2, y2)
     ctx.stroke()
+
+    onUpdate(ctx)
   }
 
   const touchStart = ({ touches }) => {
@@ -60,6 +70,8 @@ const DrawingCanvas = ({ onUpdate, width = 400, height = 240, initialView }) => 
     const stylusTouch = [...touches].find(({ touchType }) => touchType === "stylus")
     if (stylusTouch) {
       setCurrentTouch(null)
+      const ctx = canvasRef.current.getContext("2d")
+      onFinalUpdate(ctx)
     }
   }
   return (

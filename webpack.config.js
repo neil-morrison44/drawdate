@@ -32,5 +32,12 @@ module.exports = {
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ inject: "head" })],
+  plugins: [
+    new HtmlWebpackPlugin({
+      meta: {
+        viewport: "width=device-width, initial-scale=1, user-scalable=0, maximum-scale=1",
+        "apple-mobile-web-app-capable": "yes",
+      },
+    }),
+  ],
 }
