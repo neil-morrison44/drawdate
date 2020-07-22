@@ -2,6 +2,8 @@ import React, { Fragment, useState } from "react"
 import DrawingCanvas from "./drawingCanvas"
 import OutputCanvas from "./outputCanvas"
 import Tools from "./tools"
+import Palette from "./palette"
+import { renderOutputImageData } from "./renderOutputImageData"
 
 const TOOL_LIST = [
   {
@@ -21,24 +23,63 @@ const TOOL_LIST = [
   },
 ]
 
+const COLOUR_PALETTE = [
+  {
+    drawingColour: 0,
+    outputImageData: [[1]],
+  },
+  {
+    drawingColour: 64,
+    outputImageData: [
+      [1, 0, 0, 0, 1],
+      [0, 1, 0, 1, 0],
+      [0, 0, 1, 0, 0],
+      [0, 1, 0, 1, 0],
+      [1, 0, 0, 0, 1],
+    ],
+  },
+  {
+    drawingColour: 127,
+    outputImageData: [
+      [1, 0],
+      [0, 1],
+    ],
+  },
+  { drawingColour: 255, outputImageData: [[0]] },
+]
+
 const App = () => {
   const [tool, setTool] = useState("pencil")
+  const [colour, setColour] = useState(0)
+  const [outputImageData, setOutputImageData] = useState([
+    [1, 0, 0],
+    [0, 1, 0],
+    [1, 0, 0],
+  ])
 
   return (
     <div className="app">
-      <DrawingCanvas tool={tool} />
-      <OutputCanvas
-        imageData={[
-          [1, 0, 0],
-          [0, 1, 0],
-          [0, 0, 1],
-        ]}
+      <DrawingCanvas
+        tool={tool}
+        colour={colour}
+        onUpdate={(ctx) => {
+          window.requestAnimationFrame(() => {
+            const imageData = ctx.getImageData(0, 0, 400, 240)
+            setOutputImageData(renderOutputImageData(imageData, 400, 240, COLOUR_PALETTE))
+          })
+        }}
       />
+      <OutputCanvas imageData={outputImageData} />
       <Tools
         onChangeTool={(tool) => setTool(tool)}
         toolList={TOOL_LIST}
         selectedTool={tool}
       ></Tools>
+      <Palette
+        colourPalette={COLOUR_PALETTE}
+        selectedColour={colour}
+        onChangeColour={(colour) => setColour(colour)}
+      />
     </div>
   )
 }

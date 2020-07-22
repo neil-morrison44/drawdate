@@ -2,6 +2,7 @@ import React, { useRef, useLayoutEffect, useState, Fragment } from "react"
 
 const PRESSURE_FACTOR = 10
 const TOUCH_TYPE = "stylus"
+// const TOUCH_TYPE = undefined
 
 const DrawingCanvas = ({
   onUpdate = () => {},
@@ -9,6 +10,7 @@ const DrawingCanvas = ({
   width = 400,
   height = 240,
   initialImageData,
+  colour,
   tool,
 }) => {
   const canvasRef = useRef()
@@ -17,12 +19,15 @@ const DrawingCanvas = ({
 
   useLayoutEffect(() => {
     if (!boundingRect) setBoundingRect(canvasRef.current.getBoundingClientRect())
+    const ctx = canvasRef.current.getContext("2d")
+    ctx.fillStyle = "white"
+    ctx.fillRect(0, 0, width, height)
   }, [width, height, initialImageData])
 
   const setCanvasColour = (ctx) => {
     switch (tool) {
       case "pencil":
-        ctx.fillStyle = ctx.strokeStyle = "black"
+        ctx.fillStyle = ctx.strokeStyle = `rgb(${colour}, ${colour}, ${colour})`
         break
       default:
         break
@@ -106,6 +111,7 @@ const DrawingCanvas = ({
       ></canvas>
       {currentTouch?.pressure}
       {tool}
+      {colour}
     </Fragment>
   )
 }

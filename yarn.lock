@@ -4195,6 +4195,11 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-webworker-hook@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-webworker-hook/-/react-webworker-hook-0.2.1.tgz#cf1d7457d135a18f7cbb4a63b46a4939417829e5"
+  integrity sha512-tBpGuMFdKF8CyQ4eJ9kFFgfvtPyysi5HXQ3kClpOOKWywHDYA8agd+B3X2VP5Kpt8XwB91DkNV5rnuqCa2LTyQ==
+
 react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"

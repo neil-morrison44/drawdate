@@ -24,7 +24,7 @@ body {
   image-rendering: pixelated;
 }
 
-.tools__tool {
+@mixin default-button() {
   display: flex;
   flex-direction: column;
   min-height: 50px;
@@ -34,8 +34,38 @@ body {
   border-radius: 5px;
   font-size: 16px;
   background: none;
+  border-width: 2px;
+  box-sizing: border-box;
 
   &--selected {
-    background-color: white;
+    border: 2px solid rgba(120, 0, 255, 1);
   }
+}
+
+.tools__tool {
+  @include default-button;
+}
+
+.palette {
+  display: flex;
+  flex-direction: row;
+}
+
+.palette__colour {
+  @include default-button;
+  justify-content: space-around;
+  padding: 0;
+
+  canvas {
+    transform: scale(4);
+  }
+
+  &--selected {
+    border: 2px solid rgba(120, 0, 255, 1);
+  }
+}
+
+.palette__drawing-colour {
+  width: 40px;
+  height: 20px;
 }
