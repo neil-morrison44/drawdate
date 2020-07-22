@@ -10,7 +10,32 @@ body {
   position: fixed;
 }
 
+.app {
+  display: grid;
+}
+
 .drawing-canvas {
   touch-action: manipulation;
   background-color: white;
+  image-rendering: pixelated;
+}
+
+.output-canvas {
+  image-rendering: pixelated;
+}
+
+.tools__tool {
+  display: flex;
+  flex-direction: column;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  -webkit-appearance: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background: none;
+
+  &--selected {
+    background-color: white;
+  }
 }
