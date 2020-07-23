@@ -25,30 +25,21 @@ const TOOL_LIST = [
   },
 ]
 
-const COLOUR_PALETTE = [
-  {
-    drawingColour: 0,
-    outputImageData: [[1]],
-  },
-  {
-    drawingColour: 64,
-    outputImageData: [
-      [1, 0, 0, 0, 1],
-      [0, 1, 0, 1, 0],
-      [0, 0, 1, 0, 0],
-      [0, 1, 0, 1, 0],
-      [1, 0, 0, 0, 1],
-    ],
-  },
-  {
-    drawingColour: 127,
-    outputImageData: [
-      [1, 0],
-      [0, 1],
-    ],
-  },
-  { drawingColour: 255, outputImageData: [[0]] },
-]
+const COLOUR_PALETTE = {
+  0: [[1]],
+  127: [
+    [1, 0],
+    [0, 1],
+  ],
+  191: [
+    [1, 0, 0, 0, 1],
+    [0, 1, 0, 1, 0],
+    [0, 0, 1, 0, 0],
+    [0, 1, 0, 1, 0],
+    [1, 0, 0, 0, 1],
+  ],
+  255: [[0]],
+}
 
 const outputImageWorker = new OutputImageWorker()
 

@@ -1,8 +1,8 @@
 import React, { useRef, useLayoutEffect, useState, Fragment } from "react"
 
 const PRESSURE_FACTOR = 10
-const TOUCH_TYPE = "stylus"
-// const TOUCH_TYPE = undefined
+// const TOUCH_TYPE = "stylus"
+const TOUCH_TYPE = undefined
 
 const DrawingCanvas = ({
   onUpdate = () => {},
@@ -37,7 +37,7 @@ const DrawingCanvas = ({
   const drawDot = (x, y) => {
     const ctx = canvasRef.current.getContext("2d")
     setCanvasColour(ctx)
-    const size = currentTouch?.pressure || 1
+    const size = (currentTouch?.pressure || 1) / 4
     ctx.fillRect(
       Math.round(x - size),
       Math.round(y - size),

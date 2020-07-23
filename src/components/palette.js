@@ -4,7 +4,7 @@ import OutputCanvas from "./outputCanvas"
 const Palette = ({ selectedColour, colourPalette, onChangeColour }) => {
   return (
     <div className="palette">
-      {colourPalette.map(({ drawingColour, outputImageData }) => (
+      {Object.entries(colourPalette).map(([drawingColour, outputImageData]) => (
         <button
           key={drawingColour}
           onClick={() => onChangeColour(drawingColour)}
