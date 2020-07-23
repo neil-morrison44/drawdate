@@ -3,6 +3,7 @@ import React, { useState } from "react"
 const Tools = ({ onChangeTool, toolList, selectedTool }) => {
   return (
     <div className="tools">
+      <h3>Tools</h3>
       {toolList.map(({ name, Icon }) => (
         <button
           key={name}

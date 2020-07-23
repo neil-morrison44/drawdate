@@ -78,7 +78,6 @@ const App = () => {
         selectedColour={colour}
         onChangeColour={(colour) => setColour(colour)}
       />
-      {JSON.stringify(workerError || "No Error")}
     </div>
   )
 }

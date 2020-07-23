@@ -11,10 +11,12 @@ function closest(num, arr) {
   return curr
 }
 
-const paletteCache = {}
+let paletteCache = {}
 
 const renderOutputImageData = (imageData, palette, paletteValues) => {
   const { width, height, data } = imageData
+
+  paletteCache = {}
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {

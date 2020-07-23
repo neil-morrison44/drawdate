@@ -8,19 +8,29 @@ body {
   height: 100%;
   width: 100%;
   position: fixed;
+  margin: 0;
 }
 
 .app {
+  padding: 20px;
   display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  align-items: center;
+  grid-template-areas:
+    "input palette"
+    "output tools";
 }
 
 .drawing-canvas {
+  grid-area: input;
   touch-action: manipulation;
   background-color: white;
   image-rendering: pixelated;
 }
 
 .output-canvas {
+  grid-area: output;
   image-rendering: pixelated;
 }
 
@@ -40,6 +50,14 @@ body {
   &--selected {
     border: 2px solid rgba(120, 0, 255, 1);
   }
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.tools {
+  grid-area: tools;
 }
 
 .tools__tool {
@@ -47,14 +65,21 @@ body {
 }
 
 .palette {
+  grid-area: palette;
+}
+
+.palette__choices {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .palette__colour {
   @include default-button;
   justify-content: space-around;
   padding: 0;
+  flex-grow: 1;
+  height: 100px;
 
   canvas {
     transform: scale(4);
@@ -62,6 +87,10 @@ body {
 
   &--selected {
     border: 2px solid rgba(120, 0, 255, 1);
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
   }
 }
 

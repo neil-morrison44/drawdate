@@ -99,20 +99,15 @@ const DrawingCanvas = ({
     }
   }
   return (
-    <Fragment>
-      <canvas
-        ref={canvasRef}
-        className="drawing-canvas"
-        width={width}
-        height={height}
-        onTouchStart={(e) => touchStart(e)}
-        onTouchMove={(e) => touchMove(e)}
-        onTouchEnd={(e) => touchEnd(e)}
-      ></canvas>
-      {currentTouch?.pressure}
-      {tool}
-      {colour}
-    </Fragment>
+    <canvas
+      ref={canvasRef}
+      className="drawing-canvas"
+      width={width}
+      height={height}
+      onTouchStart={(e) => touchStart(e)}
+      onTouchMove={(e) => touchMove(e)}
+      onTouchEnd={(e) => touchEnd(e)}
+    ></canvas>
   )
 }
 
