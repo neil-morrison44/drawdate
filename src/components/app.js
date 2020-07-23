@@ -41,6 +41,8 @@ const COLOUR_PALETTE = {
   255: [[0]],
 }
 
+const COLOUR_PALETTE_KEYS = Object.keys(COLOUR_PALETTE)
+
 const outputImageWorker = new OutputImageWorker()
 
 const App = () => {
@@ -58,7 +60,11 @@ const App = () => {
         colour={colour}
         onUpdate={(ctx) => {
           const imageData = ctx.getImageData(0, 0, 400, 240)
-          processImageData({ imageData, palette: COLOUR_PALETTE })
+          processImageData({
+            imageData,
+            palette: COLOUR_PALETTE,
+            paletteValues: COLOUR_PALETTE_KEYS,
+          })
         }}
       />
       <OutputCanvas imageData={outputImageData} />

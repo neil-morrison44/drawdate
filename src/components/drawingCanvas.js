@@ -1,8 +1,8 @@
 import React, { useRef, useLayoutEffect, useState, Fragment } from "react"
 
 const PRESSURE_FACTOR = 10
-// const TOUCH_TYPE = "stylus"
-const TOUCH_TYPE = undefined
+const TOUCH_TYPE = "stylus"
+// const TOUCH_TYPE = undefined
 
 const DrawingCanvas = ({
   onUpdate = () => {},
