@@ -19,7 +19,7 @@ const Palette = ({ selectedColour, colourPalette, onChangeColour }) => {
           <OutputCanvas
             width={outputImageData[0].length}
             height={outputImageData.length}
-            imageData={outputImageData}
+            imagePattern={outputImageData}
           />
         </button>
       ))}

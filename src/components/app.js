@@ -51,11 +51,7 @@ const COLOUR_PALETTE = [
 const App = () => {
   const [tool, setTool] = useState("pencil")
   const [colour, setColour] = useState(0)
-  const [outputImageData, setOutputImageData] = useState([
-    [1, 0, 0],
-    [0, 1, 0],
-    [1, 0, 0],
-  ])
+  const [outputImageData, setOutputImageData] = useState(null)
 
   return (
     <div className="app">
