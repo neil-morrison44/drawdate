@@ -4,6 +4,8 @@ import OutputCanvas from "./outputCanvas"
 import Tools from "./tools"
 import Palette from "./palette"
 import { renderOutputImageData } from "./renderOutputImageData"
+import useWebWorker from "react-webworker-hook"
+import OutputImageWorker from "./outputImage.worker.js"
 
 const TOOL_LIST = [
   {
@@ -48,10 +50,15 @@ const COLOUR_PALETTE = [
   { drawingColour: 255, outputImageData: [[0]] },
 ]
 
+const outputImageWorker = new OutputImageWorker()
+
 const App = () => {
   const [tool, setTool] = useState("pencil")
   const [colour, setColour] = useState(0)
-  const [outputImageData, setOutputImageData] = useState(null)
+  // const [outputImageData, setOutputImageData] = useState(null)
+  const [outputImageData = null, processImageData, workerError] = useWebWorker({
+    worker: outputImageWorker,
+  })
 
   return (
     <div className="app">
@@ -59,10 +66,8 @@ const App = () => {
         tool={tool}
         colour={colour}
         onUpdate={(ctx) => {
-          window.requestAnimationFrame(() => {
-            const imageData = ctx.getImageData(0, 0, 400, 240)
-            setOutputImageData(renderOutputImageData(imageData, 400, 240, COLOUR_PALETTE))
-          })
+          const imageData = ctx.getImageData(0, 0, 400, 240)
+          processImageData({ imageData, palette: COLOUR_PALETTE })
         }}
       />
       <OutputCanvas imageData={outputImageData} />
@@ -76,6 +81,7 @@ const App = () => {
         selectedColour={colour}
         onChangeColour={(colour) => setColour(colour)}
       />
+      {JSON.stringify(workerError || "No Error")}
     </div>
   )
 }

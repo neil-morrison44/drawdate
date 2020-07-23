@@ -1,14 +1,14 @@
 const paletteCache = {}
 
-const renderOutputImageData = (imageData, width, height, palette) => {
+const renderOutputImageData = (imageData, palette) => {
   // const outputImageData = []
 
   // for (let y = 0; y < height; y++) {
   //   outputImageData.push([...new Array(width).fill(0)])
   // }
 
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
+  for (let y = 0; y < imageData.height; y++) {
+    for (let x = 0; x < imageData.width; x++) {
       //find current pixel
       let index = (x + y * imageData.width) * 4
       let inputShade = imageData.data[index]
