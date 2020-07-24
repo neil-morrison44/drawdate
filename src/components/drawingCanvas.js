@@ -1,15 +1,13 @@
-import React, { useRef, useLayoutEffect, useState, Fragment } from "react"
+import React, { useRef, useLayoutEffect, useState, useEffect } from "react"
 import { flood_fill } from "wasm-flood-fill"
 
-// const floodFill = import("wasm-flood-fill")
-
 const PRESSURE_FACTOR = 10
-// const TOUCH_TYPE = "stylus"
-const TOUCH_TYPE = undefined
+const TOUCH_TYPE = "stylus"
+// const TOUCH_TYPE = undefined
 
 const DrawingCanvas = ({
   onUpdate = () => {},
-  onFinalUpdate = () => {},
+  onSetUndoPoint = () => {},
   width = 400,
   height = 240,
   initialImageData,
@@ -24,7 +22,13 @@ const DrawingCanvas = ({
     if (!boundingRect) setBoundingRect(canvasRef.current.getBoundingClientRect())
     const ctx = canvasRef.current.getContext("2d")
     ctx.fillStyle = "white"
-    ctx.fillRect(0, 0, width, height)
+    if (initialImageData) {
+      ctx.putImageData(initialImageData, 0, 0)
+    } else {
+      console.log("clear?")
+      ctx.fillRect(0, 0, width, height)
+    }
+    onUpdate(ctx)
   }, [width, height, initialImageData])
 
   const setCanvasColour = (ctx) => {
@@ -33,6 +37,7 @@ const DrawingCanvas = ({
 
   const drawDot = (x, y) => {
     const ctx = canvasRef.current.getContext("2d")
+    onSetUndoPoint(ctx)
     if (tool === "pencil") {
       setCanvasColour(ctx)
       const size = (currentTouch?.pressure || 1) / 4
@@ -45,7 +50,6 @@ const DrawingCanvas = ({
     }
 
     if (tool === "fill") {
-      console.log(flood_fill)
       const imageData = ctx.getImageData(0, 0, width, height)
 
       const data = flood_fill(
@@ -109,13 +113,8 @@ const DrawingCanvas = ({
     }
   }
 
-  const touchEnd = ({ touches }) => {
-    const stylusTouch = [...touches].find(({ touchType }) => touchType === TOUCH_TYPE)
-    if (stylusTouch) {
-      setCurrentTouch(null)
-      const ctx = canvasRef.current.getContext("2d")
-      onFinalUpdate(ctx)
-    }
+  const touchEnd = () => {
+    if (currentTouch) setCurrentTouch(null)
   }
   return (
     <canvas

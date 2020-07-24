@@ -1,11 +1,12 @@
-import React, { Fragment, useState, Suspense } from "react"
+import React, { useState, useMemo, Suspense } from "react"
 
 import OutputCanvas from "./outputCanvas"
 import Tools from "./tools"
 import Palette from "./palette"
-import { renderOutputImageData } from "./renderOutputImageData"
+import throttle from "lodash.throttle"
 import useWebWorker from "react-webworker-hook"
 import OutputImageWorker from "./outputImage.worker.js"
+import { useUndoStack } from "./useUndoStack"
 
 const DrawingCanvas = React.lazy(() => import("./drawingCanvas"))
 
@@ -65,25 +66,27 @@ const outputImageWorker = new OutputImageWorker()
 const App = () => {
   const [tool, setTool] = useState("pencil")
   const [colour, setColour] = useState(0)
-  // const [outputImageData, setOutputImageData] = useState(null)
+  const [baseImageData, pushToUndoStack, undo, undoCount, clear] = useUndoStack()
   const [outputImageData = null, processImageData, workerError] = useWebWorker({
     worker: outputImageWorker,
   })
-
+  // slight risk that the `processImageData` that this memoizes and the real one will go out of sync
+  const throttledProcessImageData = useMemo(() => throttle(processImageData, 32), [])
   return (
     <div className="app">
       <Suspense fallback={"Loading..."}>
         <DrawingCanvas
           tool={tool}
           colour={colour}
-          onUpdate={(ctx) => {
-            const imageData = ctx.getImageData(0, 0, 400, 240)
-            processImageData({
-              imageData,
+          initialImageData={baseImageData}
+          onUpdate={(ctx) =>
+            throttledProcessImageData({
+              imageData: ctx.getImageData(0, 0, 400, 240),
               palette: COLOUR_PALETTE,
               paletteValues: COLOUR_PALETTE_KEYS,
             })
-          }}
+          }
+          onSetUndoPoint={(ctx) => pushToUndoStack(ctx.getImageData(0, 0, 400, 240))}
         />
       </Suspense>
       <OutputCanvas imageData={outputImageData} />
@@ -97,6 +100,13 @@ const App = () => {
         selectedColour={colour}
         onChangeColour={(colour) => setColour(colour)}
       />
+
+      <button className="app__undo" onClick={undo}>
+        Undo ({undoCount})
+      </button>
+      <button className="app__clear" onClick={clear}>
+        Clear
+      </button>
     </div>
   )
 }
