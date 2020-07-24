@@ -14,12 +14,13 @@ body {
 .app {
   padding: 20px;
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 50% 50%;
+  grid-template-columns: auto 50%;
+  grid-template-rows: auto 50%;
   align-items: center;
   grid-template-areas:
     "input palette"
     "output tools";
+  gap: 20px;
 }
 
 .drawing-canvas {
@@ -58,6 +59,9 @@ body {
 
 .tools {
   grid-area: tools;
+}
+
+.tools__choices {
   display: flex;
   flex-direction: row;
 }
@@ -65,6 +69,9 @@ body {
 .tools__tool {
   @include default-button;
   flex-basis: 50px;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
 }
 
 .palette {
