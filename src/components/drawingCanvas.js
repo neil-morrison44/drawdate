@@ -1,8 +1,11 @@
 import React, { useRef, useLayoutEffect, useState, Fragment } from "react"
+import { flood_fill } from "wasm-flood-fill"
+
+// const floodFill = import("wasm-flood-fill")
 
 const PRESSURE_FACTOR = 10
-const TOUCH_TYPE = "stylus"
-// const TOUCH_TYPE = undefined
+// const TOUCH_TYPE = "stylus"
+const TOUCH_TYPE = undefined
 
 const DrawingCanvas = ({
   onUpdate = () => {},
@@ -25,40 +28,56 @@ const DrawingCanvas = ({
   }, [width, height, initialImageData])
 
   const setCanvasColour = (ctx) => {
-    switch (tool) {
-      case "pencil":
-        ctx.fillStyle = ctx.strokeStyle = `rgb(${colour}, ${colour}, ${colour})`
-        break
-      default:
-        break
-    }
+    ctx.fillStyle = ctx.strokeStyle = `rgb(${colour}, ${colour}, ${colour})`
   }
 
   const drawDot = (x, y) => {
     const ctx = canvasRef.current.getContext("2d")
-    setCanvasColour(ctx)
-    const size = (currentTouch?.pressure || 1) / 4
-    ctx.fillRect(
-      Math.round(x - size),
-      Math.round(y - size),
-      Math.round(size * 2),
-      Math.round(size * 2)
-    )
+    if (tool === "pencil") {
+      setCanvasColour(ctx)
+      const size = (currentTouch?.pressure || 1) / 4
+      ctx.fillRect(
+        Math.round(x - size),
+        Math.round(y - size),
+        Math.round(size * 2),
+        Math.round(size * 2)
+      )
+    }
+
+    if (tool === "fill") {
+      console.log(flood_fill)
+      const imageData = ctx.getImageData(0, 0, width, height)
+
+      const data = flood_fill(
+        ctx,
+        imageData.data,
+        Math.round(x),
+        Math.round(y),
+        colour,
+        colour,
+        colour,
+        200,
+        100
+      )
+
+      ctx.putImageData(new ImageData(data, width, height), 0, 0)
+    }
 
     onUpdate(ctx)
   }
 
   const drawLine = (x1, y1, x2, y2) => {
     const ctx = canvasRef.current.getContext("2d")
-    setCanvasColour(ctx)
-    ctx.lineWidth = currentTouch?.pressure || 1
-    ctx.lineCap = "round"
-    ctx.lineJoin = "round"
-    ctx.beginPath()
-    ctx.moveTo(x1, y1)
-    ctx.lineTo(x2, y2)
-    ctx.stroke()
-
+    if (tool === "pencil") {
+      setCanvasColour(ctx)
+      ctx.lineWidth = currentTouch?.pressure || 1
+      ctx.lineCap = "round"
+      ctx.lineJoin = "round"
+      ctx.beginPath()
+      ctx.moveTo(x1, y1)
+      ctx.lineTo(x2, y2)
+      ctx.stroke()
+    }
     onUpdate(ctx)
   }
 

@@ -58,10 +58,13 @@ body {
 
 .tools {
   grid-area: tools;
+  display: flex;
+  flex-direction: row;
 }
 
 .tools__tool {
   @include default-button;
+  flex-basis: 50px;
 }
 
 .palette {
