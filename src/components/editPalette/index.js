@@ -10,10 +10,9 @@ const EditPalette = ({ palette, onUpdate, onClose }) => {
 
   const mergeNewPattern = (oldPattern, newPattern, newShade) => {
     const newPalette = { ...palette }
-    const [oldShade] = Object.entries(newPalette).find(([_, pattern]) => pattern === oldPattern)
-    delete newPalette[oldShade]
-    console.log(newShade, newPalette)
-    newPalette[newShade] = newPattern
+    const oldShade = Object.entries(newPalette).find(([_, pattern]) => pattern === oldPattern)?.[0]
+    if (oldShade) delete newPalette[oldShade]
+    if (newPattern) newPalette[newShade] = newPattern
     onUpdate(newPalette)
   }
 
@@ -42,7 +41,7 @@ const EditPalette = ({ palette, onUpdate, onClose }) => {
                 ></div>
                 Shade: {shade}
                 <OutputCanvas
-                  className={"edit-palette__output-canvas"}
+                  className="edit-palette__output-canvas"
                   width={pattern[0].length}
                   height={pattern.length}
                   imagePattern={pattern}
@@ -50,13 +49,20 @@ const EditPalette = ({ palette, onUpdate, onClose }) => {
               </button>
             ))}
           </div>
-          <button>Add New</button>
+          <button
+            className="edit-palette__add-new-button"
+            onClick={() => setSelectedPattern([[0]])}
+          >
+            Add New
+          </button>
         </Fragment>
       )}
       {selectedPattern && (
         <Fragment>
           <button onClick={() => setSelectedPattern(null)}>Back To List</button>
           <PatternEditor
+            palettePatterns={Object.values(palette)}
+            paletteKeys={Object.keys(palette)}
             pattern={selectedPattern}
             shade={Object.entries(palette).find(([_, pattern]) => selectedPattern === pattern)?.[0]}
             onUpdate={(oldPattern, newPattern, newShade) => {

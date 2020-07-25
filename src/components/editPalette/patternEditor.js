@@ -20,9 +20,16 @@ const flipBit = (pattern, rowIndex, columnIndex) => {
   return newPattern
 }
 
-const PatternEditor = ({ shade, pattern, onUpdate }) => {
+const PatternEditor = ({ paletteKeys, palettePatterns, shade, pattern, onUpdate }) => {
   const [editedPattern, setEdititedPattern] = useState(pattern)
   const [newShade, setNewShade] = useState(shade)
+
+  const getSaveText = () => {
+    if (palettePatterns.includes(pattern)) return "Update"
+    if (paletteKeys.includes(newShade)) return "Save & Overwrite"
+
+    return "Save New"
+  }
 
   return (
     <div className="pattern-editor">
@@ -44,13 +51,27 @@ const PatternEditor = ({ shade, pattern, onUpdate }) => {
           <button onClick={() => setEdititedPattern(removeColumn(editedPattern))}>{"<"}</button>
         </div>
         <div className="pattern-editor__pattern-row-buttons">
-          <button onClick={() => setEdititedPattern(addRow(editedPattern))}>{">"}</button>
           <button onClick={() => setEdititedPattern(removeRow(editedPattern))}>{"<"}</button>
+          <button onClick={() => setEdititedPattern(addRow(editedPattern))}>{">"}</button>
         </div>
       </div>
-      <div>Current shade: {newShade}</div>
+      <div>
+        Current shade:{" "}
+        <input
+          type="number"
+          min="1"
+          max="254"
+          value={newShade}
+          onChange={({ target }) => setNewShade(target.value)}
+        ></input>
+      </div>
       <div>(Recommended Shade: {recommendShade(editedPattern)})</div>
-      <button onClick={() => onUpdate(pattern, editedPattern, newShade)}>Save</button>
+      <button onClick={() => onUpdate(pattern, editedPattern, newShade)} disabled={!newShade}>
+        {getSaveText()}
+      </button>
+      {palettePatterns.includes(pattern) && (
+        <button onClick={() => onUpdate(pattern, null, newShade)}>Remove</button>
+      )}
     </div>
   )
 }
