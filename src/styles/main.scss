@@ -1,8 +1,12 @@
+@mixin playdate-yellow-background() {
+  background: rgba(255, 205, 63, 1);
+  background: color(display-p3 1 0.8 0.25 / 1);
+}
+
 html,
 body {
   overflow: hidden;
-  background: rgba(255, 205, 63, 1);
-  background: color(display-p3 1 0.8 0.25 / 1);
+  @include playdate-yellow-background();
   user-select: none;
   -webkit-user-select: none;
   height: 100%;
@@ -107,4 +111,105 @@ body {
 .palette__drawing-colour {
   width: 40px;
   height: 20px;
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(black, 0.8);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.edit-palette {
+  width: 75vw;
+  height: 75vh;
+  @include playdate-yellow-background();
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-palette__title {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.edit-palette__list {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: scroll;
+  padding: 0 10px;
+}
+
+.edit-palette__list-item {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.edit-palette__shade-box {
+  width: 50px;
+  height: 50px;
+}
+
+.edit-palette__output-canvas {
+  width: 50px;
+  height: auto;
+}
+
+.pattern-editor__row {
+  display: flex;
+  flex-direction: row;
+}
+
+.pattern-editor__cell {
+  width: 30px;
+  height: 30px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  margin: 0;
+  display: block;
+}
+
+.pattern-editor {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.pattern-editor__pattern {
+  position: relative;
+}
+
+.pattern-editor__pattern-add-column {
+  position: absolute;
+  top: 0;
+  left: 105%;
+  transform: rotate(90deg);
+  width: 100%;
+  transform-origin: 15px 50%;
+  height: 30px;
+}
+
+.pattern-editor__pattern-add-row {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  height: 30px;
 }

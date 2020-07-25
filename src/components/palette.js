@@ -1,7 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import OutputCanvas from "./outputCanvas"
+import EditPalette from "./editPalette"
 
 const Palette = ({ selectedColour, colourPalette, onChangeColour }) => {
+  const [editModalOpen, setEditModalOpen] = useState(false)
+
   return (
     <div className="palette">
       <h3>Palette</h3>
@@ -28,6 +31,10 @@ const Palette = ({ selectedColour, colourPalette, onChangeColour }) => {
           </button>
         ))}
       </div>
+      <button onClick={() => setEditModalOpen(true)}>Edit</button>
+      {editModalOpen && (
+        <EditPalette palette={colourPalette} onClose={() => setEditModalOpen(false)} />
+      )}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useRef, useLayoutEffect } from "react"
 
-const OutputCanvas = ({ imageData, imagePattern, width = 400, height = 240 }) => {
+const OutputCanvas = ({ imageData, className, imagePattern, width = 400, height = 240 }) => {
   const canvasRef = useRef()
 
   useLayoutEffect(() => {
@@ -21,7 +21,14 @@ const OutputCanvas = ({ imageData, imagePattern, width = 400, height = 240 }) =>
     }
   }, [imageData, imagePattern])
 
-  return <canvas ref={canvasRef} className="output-canvas" width={width} height={height}></canvas>
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`output-canvas ${className || ""}`}
+      width={width}
+      height={height}
+    ></canvas>
+  )
 }
 
 export default OutputCanvas
