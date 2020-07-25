@@ -3,6 +3,28 @@
   background: color(display-p3 1 0.8 0.25 / 1);
 }
 
+@mixin default-button() {
+  display: flex;
+  flex-direction: column;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  -webkit-appearance: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background: none;
+  border-width: 2px;
+  box-sizing: border-box;
+
+  &--selected {
+    border: 2px solid rgba(120, 0, 255, 1);
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
 html,
 body {
   overflow: hidden;
@@ -27,6 +49,14 @@ body {
   gap: 20px;
 }
 
+.app__undo {
+  @include default-button;
+}
+
+.app__clear {
+  @include default-button;
+}
+
 .drawing-canvas {
   grid-area: input;
   touch-action: manipulation;
@@ -37,28 +67,6 @@ body {
 .output-canvas {
   grid-area: output;
   image-rendering: pixelated;
-}
-
-@mixin default-button() {
-  display: flex;
-  flex-direction: column;
-  min-height: 50px;
-  align-items: center;
-  justify-content: center;
-  -webkit-appearance: none;
-  border-radius: 5px;
-  font-size: 16px;
-  background: none;
-  border-width: 2px;
-  box-sizing: border-box;
-
-  &--selected {
-    border: 2px solid rgba(120, 0, 255, 1);
-  }
-
-  &:focus {
-    outline: none !important;
-  }
 }
 
 .tools {
@@ -86,6 +94,13 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.palette__edit-button {
+  @include default-button();
+
+  width: 100%;
 }
 
 .palette__colour {
@@ -143,6 +158,10 @@ body {
   padding: 20px;
 }
 
+.edit-palette__close-button {
+  @include default-button();
+}
+
 .edit-palette__list {
   display: flex;
   flex-direction: column;
@@ -152,10 +171,16 @@ body {
 }
 
 .edit-palette__list-item {
+  @include default-button;
   margin-bottom: 10px;
-  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-around;
+}
+
+.edit-palette__back-to-list-button {
+  @include default-button();
+  width: 100%;
 }
 
 .edit-palette__shade-box {
@@ -206,6 +231,12 @@ body {
   display: flex;
   justify-content: space-around;
   flex-direction: column;
+
+  button {
+    @include default-button;
+    box-sizing: border-box;
+    flex-grow: 1;
+  }
 }
 
 .pattern-editor__pattern-row-buttons {
@@ -218,10 +249,32 @@ body {
   justify-content: space-around;
 
   button {
-    transform: rotate(90deg);
+    @include default-button;
+    flex-grow: 1;
+    min-height: unset;
+    span {
+      transform: rotate(90deg);
+    }
   }
 }
 
+.pattern-editor__shade-input {
+  width: 50px;
+}
+
+.pattern-editor__buttons {
+  display: flex;
+}
+
 .edit-palette__add-new-button {
+  @include default-button;
   margin-bottom: 20px;
+}
+
+.pattern-editor__save-button {
+  @include default-button;
+}
+
+.pattern-editor__remove-button {
+  @include default-button;
 }

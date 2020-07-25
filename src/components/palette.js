@@ -31,7 +31,9 @@ const Palette = ({ selectedColour, colourPalette, onChangeColour, onUpdatePalett
           </button>
         ))}
       </div>
-      <button onClick={() => setEditModalOpen(true)}>Edit</button>
+      <button className="palette__edit-button" onClick={() => setEditModalOpen(true)}>
+        Edit
+      </button>
       {editModalOpen && (
         <EditPalette
           palette={colourPalette}

@@ -19,7 +19,10 @@ const EditPalette = ({ palette, onUpdate, onClose }) => {
   return createPortal(
     <div className="edit-palette">
       <div className="edit-palette__title">
-        Edit Palette <button onClick={onClose}>Close</button>
+        Edit Palette{" "}
+        <button className="edit-palette__close-button" onClick={onClose}>
+          Close
+        </button>
       </div>
       {!selectedPattern && (
         <Fragment>
@@ -59,7 +62,12 @@ const EditPalette = ({ palette, onUpdate, onClose }) => {
       )}
       {selectedPattern && (
         <Fragment>
-          <button onClick={() => setSelectedPattern(null)}>Back To List</button>
+          <button
+            className="edit-palette__back-to-list-button"
+            onClick={() => setSelectedPattern(null)}
+          >
+            Back To List
+          </button>
           <PatternEditor
             palettePatterns={Object.values(palette)}
             paletteKeys={Object.keys(palette)}

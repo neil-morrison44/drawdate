@@ -8,11 +8,17 @@ const recommendShade = (pattern) => {
 
 const addRow = (pattern) => [...pattern, [...pattern[pattern.length - 1]]]
 
-const removeRow = (pattern) => [...pattern].slice(0, pattern.length - 1)
+const removeRow = (pattern) => {
+  if (pattern.length === 1) return pattern
+  return [...pattern].slice(0, pattern.length - 1)
+}
 
 const addColumn = (pattern) => pattern.map((row) => [...row, row[row.length - 1]])
 
-const removeColumn = (pattern) => pattern.map((row) => [...row].slice(0, row.length - 1))
+const removeColumn = (pattern) => {
+  if (pattern[0].length === 1) return pattern
+  return pattern.map((row) => [...row].slice(0, row.length - 1))
+}
 
 const flipBit = (pattern, rowIndex, columnIndex) => {
   const newPattern = pattern.map((row) => [...row])
@@ -27,7 +33,6 @@ const PatternEditor = ({ paletteKeys, palettePatterns, shade, pattern, onUpdate 
   const getSaveText = () => {
     if (palettePatterns.includes(pattern)) return "Update"
     if (paletteKeys.includes(newShade)) return "Save & Overwrite"
-
     return "Save New"
   }
 
@@ -51,27 +56,43 @@ const PatternEditor = ({ paletteKeys, palettePatterns, shade, pattern, onUpdate 
           <button onClick={() => setEdititedPattern(removeColumn(editedPattern))}>{"<"}</button>
         </div>
         <div className="pattern-editor__pattern-row-buttons">
-          <button onClick={() => setEdititedPattern(removeRow(editedPattern))}>{"<"}</button>
-          <button onClick={() => setEdititedPattern(addRow(editedPattern))}>{">"}</button>
+          <button onClick={() => setEdititedPattern(removeRow(editedPattern))}>
+            <span>{"<"}</span>
+          </button>
+          <button onClick={() => setEdititedPattern(addRow(editedPattern))}>
+            <span>{">"}</span>
+          </button>
         </div>
       </div>
       <div>
-        Current shade:{" "}
+        Shade:{" "}
         <input
           type="number"
           min="1"
           max="254"
           value={newShade}
+          className="pattern-editor__shade-input"
           onChange={({ target }) => setNewShade(target.value)}
-        ></input>
+        ></input>{" "}
+        (Recommended shade: {recommendShade(editedPattern)})
       </div>
-      <div>(Recommended Shade: {recommendShade(editedPattern)})</div>
-      <button onClick={() => onUpdate(pattern, editedPattern, newShade)} disabled={!newShade}>
-        {getSaveText()}
-      </button>
-      {palettePatterns.includes(pattern) && (
-        <button onClick={() => onUpdate(pattern, null, newShade)}>Remove</button>
-      )}
+      <div className="pattern-editor__buttons">
+        <button
+          className="pattern-editor__save-button"
+          onClick={() => onUpdate(pattern, editedPattern, newShade)}
+          disabled={!newShade}
+        >
+          {getSaveText()}
+        </button>
+        {palettePatterns.includes(pattern) && (
+          <button
+            className="pattern-editor__remove-button"
+            onClick={() => onUpdate(pattern, null, newShade)}
+          >
+            Remove
+          </button>
+        )}
+      </div>
     </div>
   )
 }
