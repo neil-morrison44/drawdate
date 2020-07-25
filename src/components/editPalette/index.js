@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react"
+import React, { useState, Fragment, useEffect } from "react"
 import { createPortal } from "react-dom"
 import OutputCanvas from "../outputCanvas"
 import PatternEditor from "./patternEditor"
@@ -7,6 +7,15 @@ const UNEDITABLE_SHADES = ["0", "255"]
 
 const EditPalette = ({ palette, onUpdate, onClose }) => {
   const [selectedPattern, setSelectedPattern] = useState(null)
+
+  const mergeNewPattern = (oldPattern, newPattern, newShade) => {
+    const newPalette = { ...palette }
+    const [oldShade] = Object.entries(newPalette).find(([_, pattern]) => pattern === oldPattern)
+    delete newPalette[oldShade]
+    console.log(newShade, newPalette)
+    newPalette[newShade] = newPattern
+    onUpdate(newPalette)
+  }
 
   return createPortal(
     <div className="edit-palette">
@@ -49,7 +58,11 @@ const EditPalette = ({ palette, onUpdate, onClose }) => {
           <button onClick={() => setSelectedPattern(null)}>Back To List</button>
           <PatternEditor
             pattern={selectedPattern}
-            shade={Object.entries(palette).find(([_, pattern]) => selectedPattern === pattern)[0]}
+            shade={Object.entries(palette).find(([_, pattern]) => selectedPattern === pattern)?.[0]}
+            onUpdate={(oldPattern, newPattern, newShade) => {
+              setSelectedPattern(null)
+              mergeNewPattern(oldPattern, newPattern, newShade)
+            }}
           />
         </Fragment>
       )}

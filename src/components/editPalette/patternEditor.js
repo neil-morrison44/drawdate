@@ -8,7 +8,11 @@ const recommendShade = (pattern) => {
 
 const addRow = (pattern) => [...pattern, [...pattern[pattern.length - 1]]]
 
+const removeRow = (pattern) => [...pattern].slice(0, pattern.length - 1)
+
 const addColumn = (pattern) => pattern.map((row) => [...row, row[row.length - 1]])
+
+const removeColumn = (pattern) => pattern.map((row) => [...row].slice(0, row.length - 1))
 
 const flipBit = (pattern, rowIndex, columnIndex) => {
   const newPattern = pattern.map((row) => [...row])
@@ -35,18 +39,14 @@ const PatternEditor = ({ shade, pattern, onUpdate }) => {
             ))}
           </div>
         ))}
-        <button
-          className="pattern-editor__pattern-add-column"
-          onClick={() => setEdititedPattern(addColumn(editedPattern))}
-        >
-          Add Column
-        </button>
-        <button
-          className="pattern-editor__pattern-add-row"
-          onClick={() => setEdititedPattern(addRow(editedPattern))}
-        >
-          Add Row
-        </button>
+        <div className="pattern-editor__pattern-column-buttons">
+          <button onClick={() => setEdititedPattern(addColumn(editedPattern))}>{">"}</button>
+          <button onClick={() => setEdititedPattern(removeColumn(editedPattern))}>{"<"}</button>
+        </div>
+        <div className="pattern-editor__pattern-row-buttons">
+          <button onClick={() => setEdititedPattern(addRow(editedPattern))}>{">"}</button>
+          <button onClick={() => setEdititedPattern(removeRow(editedPattern))}>{"<"}</button>
+        </div>
       </div>
       <div>Current shade: {newShade}</div>
       <div>(Recommended Shade: {recommendShade(editedPattern)})</div>

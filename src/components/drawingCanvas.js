@@ -2,8 +2,8 @@ import React, { useRef, useLayoutEffect, useState, useEffect } from "react"
 import { flood_fill } from "wasm-flood-fill"
 
 const PRESSURE_FACTOR = 10
-const TOUCH_TYPE = "stylus"
-// const TOUCH_TYPE = undefined
+// const TOUCH_TYPE = "stylus"
+const TOUCH_TYPE = undefined
 
 const DrawingCanvas = ({
   onUpdate = () => {},
@@ -13,6 +13,7 @@ const DrawingCanvas = ({
   initialImageData,
   colour,
   tool,
+  palette,
 }) => {
   const canvasRef = useRef()
   const [currentTouch, setCurrentTouch] = useState(null)
@@ -25,11 +26,15 @@ const DrawingCanvas = ({
     if (initialImageData) {
       ctx.putImageData(initialImageData, 0, 0)
     } else {
-      console.log("clear?")
       ctx.fillRect(0, 0, width, height)
     }
     onUpdate(ctx)
   }, [width, height, initialImageData])
+
+  useLayoutEffect(() => {
+    const ctx = canvasRef.current.getContext("2d")
+    onUpdate(ctx)
+  }, [palette])
 
   const setCanvasColour = (ctx) => {
     ctx.fillStyle = ctx.strokeStyle = `rgb(${colour}, ${colour}, ${colour})`

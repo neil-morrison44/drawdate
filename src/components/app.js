@@ -59,31 +59,33 @@ const COLOUR_PALETTE = {
   255: [[0]],
 }
 
-const COLOUR_PALETTE_KEYS = Object.keys(COLOUR_PALETTE)
-
 const outputImageWorker = new OutputImageWorker()
 
 const App = () => {
   const [tool, setTool] = useState("pencil")
   const [colour, setColour] = useState(0)
+  const [palette, setPalette] = useState(COLOUR_PALETTE)
   const [baseImageData, pushToUndoStack, undo, undoCount, clear] = useUndoStack()
   const [outputImageData = null, processImageData, workerError] = useWebWorker({
     worker: outputImageWorker,
   })
+  const paletteKeys = Object.keys(palette)
+
   // slight risk that the `processImageData` that this memoizes and the real one will go out of sync
   const throttledProcessImageData = useMemo(() => throttle(processImageData, 32), [])
   return (
     <div className="app">
       <Suspense fallback={"Loading..."}>
         <DrawingCanvas
+          palette={palette}
           tool={tool}
           colour={colour}
           initialImageData={baseImageData}
           onUpdate={(ctx) =>
             throttledProcessImageData({
               imageData: ctx.getImageData(0, 0, 400, 240),
-              palette: COLOUR_PALETTE,
-              paletteValues: COLOUR_PALETTE_KEYS,
+              palette,
+              paletteValues: paletteKeys,
             })
           }
           onSetUndoPoint={(ctx) => pushToUndoStack(ctx.getImageData(0, 0, 400, 240))}
@@ -96,9 +98,10 @@ const App = () => {
         selectedTool={tool}
       ></Tools>
       <Palette
-        colourPalette={COLOUR_PALETTE}
+        colourPalette={palette}
         selectedColour={colour}
         onChangeColour={(colour) => setColour(colour)}
+        onUpdatePalette={setPalette}
       />
 
       <button className="app__undo" onClick={undo}>
