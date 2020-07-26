@@ -1,0 +1,53 @@
+.edit-palette {
+  width: 75vw;
+  height: 75vh;
+  @include playdate-yellow-background();
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-palette__title {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.edit-palette__close-button {
+  @include default-button();
+}
+
+.edit-palette__list {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: scroll;
+  padding: 0 10px;
+}
+
+.edit-palette__list-item {
+  @include default-button;
+  margin-bottom: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.edit-palette__back-to-list-button {
+  @include default-button();
+  width: 100%;
+}
+
+.edit-palette__shade-box {
+  width: 50px;
+  height: 50px;
+}
+
+.edit-palette__output-canvas {
+  width: 50px;
+  height: auto;
+}
+
+.edit-palette__add-new-button {
+  @include default-button;
+  margin-bottom: 20px;
+}

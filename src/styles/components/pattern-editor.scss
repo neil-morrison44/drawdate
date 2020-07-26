@@ -1,0 +1,80 @@
+.pattern-editor__row {
+  display: flex;
+  flex-direction: row;
+}
+
+.pattern-editor__cell {
+  width: 30px;
+  height: 30px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  margin: 0;
+  display: block;
+}
+
+.pattern-editor {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.pattern-editor__pattern {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.pattern-editor__pattern-column-buttons {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 10px);
+  height: 100%;
+  width: 30px;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+
+  button {
+    @include default-button;
+    box-sizing: border-box;
+    flex-grow: 1;
+  }
+}
+
+.pattern-editor__pattern-row-buttons {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-around;
+
+  button {
+    @include default-button;
+    flex-grow: 1;
+    min-height: unset;
+    span {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.pattern-editor__shade-input {
+  width: 50px;
+}
+
+.pattern-editor__buttons {
+  display: flex;
+}
+
+.pattern-editor__save-button {
+  @include default-button;
+}
+
+.pattern-editor__remove-button {
+  @include default-button;
+}

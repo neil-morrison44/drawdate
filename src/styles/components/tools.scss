@@ -1,0 +1,16 @@
+.tools {
+  grid-area: tools;
+}
+
+.tools__choices {
+  display: flex;
+  flex-direction: row;
+}
+
+.tools__tool {
+  @include default-button;
+  flex-basis: 50px;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}

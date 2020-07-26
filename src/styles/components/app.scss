@@ -1,0 +1,19 @@
+.app {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto 50%;
+  grid-template-rows: auto 50%;
+  align-items: center;
+  grid-template-areas:
+    "input palette"
+    "output tools";
+  gap: 20px;
+}
+
+.app__undo {
+  @include default-button;
+}
+
+.app__clear {
+  @include default-button;
+}
