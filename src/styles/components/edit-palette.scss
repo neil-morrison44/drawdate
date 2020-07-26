@@ -1,19 +1,5 @@
 .edit-palette {
-  width: 75vw;
-  height: 75vh;
-  @include playdate-yellow-background();
-  display: flex;
-  flex-direction: column;
-}
-
-.edit-palette__title {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-}
-
-.edit-palette__close-button {
-  @include default-button();
+  @include modal();
 }
 
 .edit-palette__list {

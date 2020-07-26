@@ -24,3 +24,25 @@
     outline: none !important;
   }
 }
+
+@mixin modal() {
+  & {
+    width: 75vw;
+    height: 75vh;
+    @include playdate-yellow-background();
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+  }
+
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    font-size: 24px;
+  }
+
+  &__close-button {
+    @include default-button();
+  }
+}
