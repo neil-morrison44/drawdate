@@ -23,6 +23,7 @@ const App = () => {
     worker: outputImageWorker,
   })
   const [openModal, setOpenModal] = useState(null)
+  const drawingCanvasRef = useRef()
   const outputCanvasRef = useRef()
 
   const paletteKeys = Object.keys(palette)
@@ -33,6 +34,7 @@ const App = () => {
     <div className="app">
       <Suspense fallback={"Loading..."}>
         <DrawingCanvas
+          ref={drawingCanvasRef}
           palette={palette}
           tool={tool}
           colour={colour}
@@ -47,7 +49,7 @@ const App = () => {
           onSetUndoPoint={(ctx) => pushToUndoStack(ctx.getImageData(0, 0, 400, 240))}
         />
       </Suspense>
-      <OutputCanvas imageData={outputImageData} forward />
+      <OutputCanvas imageData={outputImageData} ref={outputCanvasRef} />
       <Tools
         onChangeTool={(tool) => setTool(tool)}
         toolList={TOOL_LIST}
@@ -75,7 +77,14 @@ const App = () => {
       </div>
 
       <Suspense fallback={"Loading..."}>
-        {openModal === "export" && <Export onClose={() => setOpenModal(null)} />}
+        {openModal === "export" && (
+          <Export
+            palette={palette}
+            onClose={() => setOpenModal(null)}
+            outputCanvasRef={outputCanvasRef}
+            drawingCanvasRef={drawingCanvasRef}
+          />
+        )}
       </Suspense>
     </div>
   )

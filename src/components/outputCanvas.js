@@ -1,7 +1,11 @@
-import React, { useRef, useLayoutEffect } from "react"
+import React, { useRef, forwardRef, useLayoutEffect, useImperativeHandle } from "react"
 
-const OutputCanvas = ({ imageData, className, imagePattern, width = 400, height = 240 }) => {
+const OutputCanvas = ({ imageData, className, imagePattern, width = 400, height = 240 }, ref) => {
   const canvasRef = useRef()
+
+  useImperativeHandle(ref, () => ({
+    getContext: (mode) => canvasRef.current.getContext(mode),
+  }))
 
   useLayoutEffect(() => {
     const ctx = canvasRef.current.getContext("2d")
@@ -31,4 +35,4 @@ const OutputCanvas = ({ imageData, className, imagePattern, width = 400, height 
   )
 }
 
-export default OutputCanvas
+export default forwardRef(OutputCanvas)

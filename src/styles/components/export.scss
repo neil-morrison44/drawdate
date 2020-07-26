@@ -1,3 +1,15 @@
 .export {
   @include modal();
+  align-items: center;
+}
+
+.export__preview-image {
+  margin-bottom: 20px;
+}
+
+.export__download-link {
+  border: solid black;
+  color: black;
+  @include default-button();
+  width: 100%;
 }

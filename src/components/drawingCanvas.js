@@ -1,23 +1,37 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from "react"
+import React, {
+  useRef,
+  useLayoutEffect,
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react"
 import { flood_fill } from "wasm-flood-fill"
 
 const PRESSURE_FACTOR = 10
-const TOUCH_TYPE = "stylus"
-// const TOUCH_TYPE = undefined
+// const TOUCH_TYPE = "stylus"
+const TOUCH_TYPE = undefined
 
-const DrawingCanvas = ({
-  onUpdate = () => {},
-  onSetUndoPoint = () => {},
-  width = 400,
-  height = 240,
-  initialImageData,
-  colour,
-  tool,
-  palette,
-}) => {
+const DrawingCanvas = (
+  {
+    onUpdate = () => {},
+    onSetUndoPoint = () => {},
+    width = 400,
+    height = 240,
+    initialImageData,
+    colour,
+    tool,
+    palette,
+  },
+  ref
+) => {
   const canvasRef = useRef()
   const [currentTouch, setCurrentTouch] = useState(null)
   const [boundingRect, setBoundingRect] = useState(null)
+
+  useImperativeHandle(ref, () => ({
+    toDataURL: (mode) => canvasRef.current.toDataURL(),
+  }))
 
   useLayoutEffect(() => {
     if (!boundingRect) setBoundingRect(canvasRef.current.getBoundingClientRect())
@@ -134,4 +148,4 @@ const DrawingCanvas = ({
   )
 }
 
-export default DrawingCanvas
+export default forwardRef(DrawingCanvas)
