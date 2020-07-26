@@ -23,7 +23,7 @@ const useUndoStack = () => {
 
   const undoCount = undoStack.length
 
-  return [baseImageData, pushToUndoStack, undo, undoCount, clear]
+  return [baseImageData, pushToUndoStack, undo, undoCount, clear, setBaseImageData]
 }
 
 export { useUndoStack }

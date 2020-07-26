@@ -2,7 +2,13 @@ import React, { useState } from "react"
 import OutputCanvas from "./outputCanvas"
 import EditPalette from "./editPalette"
 
-const Palette = ({ selectedColour, colourPalette, onChangeColour, onUpdatePalette }) => {
+const Palette = ({
+  selectedColour,
+  colourPalette,
+  onChangeColour = () => {},
+  onUpdatePalette = () => {},
+  readOnly = false,
+}) => {
   const [editModalOpen, setEditModalOpen] = useState(false)
 
   return (
@@ -31,9 +37,11 @@ const Palette = ({ selectedColour, colourPalette, onChangeColour, onUpdatePalett
           </button>
         ))}
       </div>
-      <button className="palette__edit-button" onClick={() => setEditModalOpen(true)}>
-        Edit
-      </button>
+      {!readOnly && (
+        <button className="palette__edit-button" onClick={() => setEditModalOpen(true)}>
+          Edit
+        </button>
+      )}
       {editModalOpen && (
         <EditPalette
           palette={colourPalette}

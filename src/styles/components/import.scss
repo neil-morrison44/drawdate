@@ -1,0 +1,31 @@
+.import {
+  @include modal();
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.import__preview {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: auto auto 10%;
+  grid-template-areas: "palette palette" "drawing output" "import-button import-button";
+  // flex-grow: 1;
+  gap: 20px;
+}
+
+.import__import-button {
+  @include default-button();
+  grid-area: import-button;
+}
+
+.import__drawing-preview {
+  grid-area: drawing;
+  width: 200px;
+  height: 120px;
+}
+
+.import__output-preview {
+  grid-area: output;
+  width: 200px;
+  height: 120px;
+}

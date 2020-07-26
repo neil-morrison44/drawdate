@@ -11,6 +11,7 @@ import { COLOUR_PALETTE, TOOL_LIST } from "../values/toolsAndPalette"
 
 const DrawingCanvas = React.lazy(() => import("./drawingCanvas"))
 const Export = React.lazy(() => import("./export"))
+const Import = React.lazy(() => import("./import"))
 
 const outputImageWorker = new OutputImageWorker()
 
@@ -18,7 +19,7 @@ const App = () => {
   const [tool, setTool] = useState("pencil")
   const [colour, setColour] = useState(0)
   const [palette, setPalette] = useState(COLOUR_PALETTE)
-  const [baseImageData, pushToUndoStack, undo, undoCount, clear] = useUndoStack()
+  const [baseImageData, pushToUndoStack, undo, undoCount, clear, setBaseImageData] = useUndoStack()
   const [outputImageData = null, processImageData] = useWebWorker({
     worker: outputImageWorker,
   })
@@ -68,7 +69,7 @@ const App = () => {
         <button className="app__clear" onClick={clear}>
           Clear
         </button>
-        <button className="app__import" onClick={undo}>
+        <button className="app__import" onClick={() => setOpenModal("import")}>
           Import
         </button>
         <button className="app__export" onClick={() => setOpenModal("export")}>
@@ -83,6 +84,16 @@ const App = () => {
             onClose={() => setOpenModal(null)}
             outputCanvasRef={outputCanvasRef}
             drawingCanvasRef={drawingCanvasRef}
+          />
+        )}
+        {openModal === "import" && (
+          <Import
+            onClose={() => setOpenModal(null)}
+            onImportPalette={setPalette}
+            onImportDrawingCanvas={(imageData) => {
+              // pushToUndoStack(imageData)
+              setBaseImageData(imageData)
+            }}
           />
         )}
       </Suspense>
