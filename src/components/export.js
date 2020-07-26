@@ -8,22 +8,23 @@ const Export = ({ onClose, palette, outputCanvasRef, drawingCanvasRef }) => {
   useEffect(() => {
     const ctx = outputCanvasRef.current.getContext("2d")
     ctx.canvas.toBlob((blob) => {
-      blob
-        .stream()
-        .getReader()
-        .read()
-        .then(({ value }) => {
-          const metadata = readMetadata(value)
-          const tEXt = {
-            Palette: JSON.stringify(palette),
-            DrawingCanvas: drawingCanvasRef.current.toDataURL(),
-          }
-          return writeMetadata(value, { ...metadata, tEXt })
-        })
-        .then((buffer) => {
-          const blob = new Blob([buffer], { type: "image/png" })
-          setOutputSrc(URL.createObjectURL(blob))
-        })
+      const reader = new FileReader()
+
+      reader.readAsArrayBuffer(blob)
+
+      reader.onload = () => {
+        const buffer = new Uint8Array(reader.result)
+        console.log(buffer)
+        const metadata = readMetadata(buffer)
+        const tEXt = {
+          Palette: JSON.stringify(palette),
+          DrawingCanvas: drawingCanvasRef.current.toDataURL(),
+        }
+        const withMetaDataBuffer = writeMetadata(buffer, { ...metadata, tEXt })
+
+        const blob = new Blob([withMetaDataBuffer], { type: "image/png" })
+        setOutputSrc(URL.createObjectURL(blob))
+      }
     })
   }, [])
 
