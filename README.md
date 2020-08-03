@@ -12,7 +12,7 @@ A tool for creating 1 bit art for the PlayDate console
 
 ## Known Issues
 
-- For some reason app refreshes once you've exported an image on iPad when added to home screen, so be sure to actually save the image before clicking "Done"
+- The pattern editor can be a bit glitchy, usually it'll fix itself but it can get confused and think you're clicking things you're not.
 
 ## Roadmap
 
