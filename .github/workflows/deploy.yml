@@ -26,6 +26,8 @@ jobs:
       with:
         node-version: 14
 
-    # Runs a single command using the runners shell
+    - name: Install Deps
+      run: yarn install
+      
     - name: Build Webpack
       run: npx webpack
