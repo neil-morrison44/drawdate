@@ -4,6 +4,8 @@
     "png-metadata": "neil-morrison44/png-metadata#patch-1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "react-use-localstorage": "^3.4.3",
     "react-webworker-hook": "^0.2.1",
     "wasm-flood-fill": "^1.1.1"
   },
@@ -13,6 +15,7 @@
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
+    "favicons-webpack-plugin": "^4.2.0",
     "html-webpack-plugin": "^4.3.0",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",

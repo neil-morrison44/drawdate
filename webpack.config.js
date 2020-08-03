@@ -1,5 +1,6 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin")
 
 module.exports = {
   //...
@@ -43,5 +44,6 @@ module.exports = {
         "apple-mobile-web-app-capable": "yes",
       },
     }),
+    new FaviconsWebpackPlugin("./src/logo.png"),
   ],
 }

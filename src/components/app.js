@@ -10,6 +10,7 @@ import { useUndoStack } from "./useUndoStack"
 import { COLOUR_PALETTE, TOOL_LIST } from "../values/toolsAndPalette"
 import ImplementContextProvider from "./implementContextProvider"
 import ChooseImplement from "./chooseImplement"
+import GithubLink from "./githubLink"
 
 const DrawingCanvas = React.lazy(() => import("./drawingCanvas"))
 const Export = React.lazy(() => import("./export"))
@@ -102,6 +103,7 @@ const App = () => {
           )}
         </Suspense>
       </div>
+      <GithubLink />
     </ImplementContextProvider>
   )
 }
