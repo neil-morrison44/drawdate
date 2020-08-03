@@ -9,9 +9,7 @@ const Export = ({ onClose, palette, outputCanvasRef, drawingCanvasRef }) => {
     const ctx = outputCanvasRef.current.getContext("2d")
     ctx.canvas.toBlob((blob) => {
       const reader = new FileReader()
-
       reader.readAsArrayBuffer(blob)
-
       reader.onload = () => {
         const buffer = new Uint8Array(reader.result)
         console.log(buffer)

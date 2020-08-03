@@ -5,8 +5,10 @@ import React, {
   useEffect,
   forwardRef,
   useImperativeHandle,
+  useContext,
 } from "react"
 import { flood_fill } from "wasm-flood-fill"
+import { ImplementContext, IMPLEMENT_OPTIONS } from "./implementContextProvider"
 
 const PRESSURE_FACTOR = 10
 const TOUCH_TYPE = "stylus"
@@ -26,6 +28,8 @@ const DrawingCanvas = (
   ref
 ) => {
   const canvasRef = useRef()
+  const { implement } = useContext(ImplementContext)
+  console.log(implement)
   const [currentTouch, setCurrentTouch] = useState(null)
   const [boundingRect, setBoundingRect] = useState(null)
 
@@ -104,14 +108,22 @@ const DrawingCanvas = (
     onUpdate(ctx)
   }
 
+  const findTouch = (touches) => {
+    if (implement === IMPLEMENT_OPTIONS.STYLUS) {
+      return [...touches].find(({ touchType }) => touchType === TOUCH_TYPE)
+    } else {
+      return touches[0]
+    }
+  }
+
   const touchStart = ({ touches }) => {
-    const stylusTouch = [...touches].find(({ touchType }) => touchType === TOUCH_TYPE)
-    if (stylusTouch) {
-      const { clientX, clientY } = stylusTouch
+    const activeTouch = findTouch(touches)
+    if (activeTouch) {
+      const { clientX, clientY } = activeTouch
       const newTouch = {
         x: clientX - boundingRect.left,
         y: clientY - boundingRect.top,
-        pressure: stylusTouch.force * PRESSURE_FACTOR,
+        pressure: activeTouch.force * PRESSURE_FACTOR,
       }
       setCurrentTouch(newTouch)
       drawDot(newTouch.x, newTouch.y)
@@ -119,13 +131,13 @@ const DrawingCanvas = (
   }
 
   const touchMove = ({ touches }) => {
-    const stylusTouch = [...touches].find(({ touchType }) => touchType === TOUCH_TYPE)
-    if (stylusTouch) {
-      const { clientX, clientY } = stylusTouch
+    const activeTouch = findTouch(touches)
+    if (activeTouch) {
+      const { clientX, clientY } = activeTouch
       const newTouch = {
         x: clientX - boundingRect.left,
         y: clientY - boundingRect.top,
-        pressure: stylusTouch.force * PRESSURE_FACTOR,
+        pressure: activeTouch.force * PRESSURE_FACTOR,
       }
       drawLine(currentTouch.x, currentTouch.y, newTouch.x, newTouch.y)
       setCurrentTouch(newTouch)
@@ -135,6 +147,22 @@ const DrawingCanvas = (
   const touchEnd = () => {
     if (currentTouch) setCurrentTouch(null)
   }
+
+  const onMouseDown = (e) => {
+    if (implement !== IMPLEMENT_OPTIONS.MOUSE) return
+    touchStart({ touches: [{ ...e, force: 0.5 }] })
+  }
+
+  const onMouseMove = (e) => {
+    if (implement !== IMPLEMENT_OPTIONS.MOUSE) return
+    if (currentTouch) touchMove({ touches: [{ ...e, force: 0.5 }] })
+  }
+
+  const onMouseUp = (e) => {
+    if (implement !== IMPLEMENT_OPTIONS.MOUSE) return
+    touchEnd()
+  }
+
   return (
     <canvas
       ref={canvasRef}
@@ -144,6 +172,9 @@ const DrawingCanvas = (
       onTouchStart={(e) => touchStart(e)}
       onTouchMove={(e) => touchMove(e)}
       onTouchEnd={(e) => touchEnd(e)}
+      onMouseDown={(e) => onMouseDown(e)}
+      onMouseMove={(e) => onMouseMove(e)}
+      onMouseUp={(e) => onMouseUp(e)}
     ></canvas>
   )
 }
