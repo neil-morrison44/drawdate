@@ -44,6 +44,13 @@ module.exports = {
         "apple-mobile-web-app-capable": "yes",
       },
     }),
-    new FaviconsWebpackPlugin({logo: "./src/logo.png", favicons: {appName: "DrawDate", orientation: "landscape", icons:{apple: true, android: true, appleStartup: true, favicons: true, firefox: true}}}),
+    new FaviconsWebpackPlugin({
+      logo: "./src/logo.png",
+      favicons: {
+        appName: "DrawDate",
+        orientation: "landscape",
+        icons: { apple: true, android: true, appleStartup: true, favicons: true, firefox: true },
+      },
+    }),
   ],
 }
