@@ -37,8 +37,12 @@ module.exports = {
       },
     ],
   },
+  output: {
+    filename: "[name].[hash].js",
+  },
   plugins: [
     new HtmlWebpackPlugin({
+      inject: true,
       meta: {
         viewport: "width=device-width, initial-scale=1, user-scalable=0, maximum-scale=1",
         "apple-mobile-web-app-capable": "yes",
@@ -46,6 +50,7 @@ module.exports = {
     }),
     new FaviconsWebpackPlugin({
       logo: "./src/logo.png",
+      inject: true,
       favicons: {
         appName: "DrawDate",
         orientation: "landscape",

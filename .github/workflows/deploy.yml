@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -18,28 +18,28 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-    
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.1
-      with:
-        node-version: 14
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
-    - name: Install Deps
-      run: yarn install
-      
-    - name: Build Webpack
-      run: npx webpack
-    
-    - name: Deploy to S3
-      uses: jakejarvis/s3-sync-action@v0.5.1
-      with:
-        args: --acl public-read
-      env:
-        AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_NAME }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        SOURCE_DIR: "dist"
-        DEST_DIR: "drawdate"
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: 14
+
+      - name: Install Deps
+        run: yarn install
+
+      - name: Build Webpack
+        run: npx webpack --mode=production
+
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --acl public-read
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: "dist"
+          DEST_DIR: "drawdate"
