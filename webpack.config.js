@@ -51,10 +51,10 @@ module.exports = {
     new FaviconsWebpackPlugin({
       logo: "./src/logo.png",
       prefix: "drawdate/assets/",
-      start_url: "/drawdate/",
       inject: true,
       favicons: {
         appName: "DrawDate",
+        start_url: "/drawdate/",
         orientation: "landscape",
         icons: { apple: true, android: true, appleStartup: true, favicons: true, firefox: true },
       },
