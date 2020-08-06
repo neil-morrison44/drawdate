@@ -51,6 +51,7 @@ module.exports = {
     new FaviconsWebpackPlugin({
       logo: "./src/logo.png",
       prefix: "drawdate/assets/",
+      start_url: "/drawdate/",
       inject: true,
       favicons: {
         appName: "DrawDate",
