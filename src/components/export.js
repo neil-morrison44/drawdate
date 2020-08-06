@@ -12,7 +12,6 @@ const Export = ({ onClose, palette, outputCanvasRef, drawingCanvasRef }) => {
       reader.readAsArrayBuffer(blob)
       reader.onload = () => {
         const buffer = new Uint8Array(reader.result)
-        console.log(buffer)
         const metadata = readMetadata(buffer)
         const tEXt = {
           Palette: JSON.stringify(palette),

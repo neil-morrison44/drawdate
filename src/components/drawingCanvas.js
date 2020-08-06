@@ -29,7 +29,6 @@ const DrawingCanvas = (
 ) => {
   const canvasRef = useRef()
   const { implement } = useContext(ImplementContext)
-  console.log(implement)
   const [currentTouch, setCurrentTouch] = useState(null)
   const [boundingRect, setBoundingRect] = useState(null)
 
