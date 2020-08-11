@@ -12,7 +12,6 @@ import { ImplementContext, IMPLEMENT_OPTIONS } from "./implementContextProvider"
 
 const PRESSURE_FACTOR = 10
 const TOUCH_TYPE = "stylus"
-// const TOUCH_TYPE = undefined
 
 const DrawingCanvas = (
   {
@@ -54,13 +53,17 @@ const DrawingCanvas = (
   }, [palette])
 
   const setCanvasColour = (ctx) => {
-    ctx.fillStyle = ctx.strokeStyle = `rgb(${colour}, ${colour}, ${colour})`
+    if (tool === "mask") {
+      ctx.fillStyle = ctx.strokeStyle = "red"
+    } else {
+      ctx.fillStyle = ctx.strokeStyle = `rgb(${colour}, ${colour}, ${colour})`
+    }
   }
 
   const drawDot = (x, y) => {
     const ctx = canvasRef.current.getContext("2d")
     onSetUndoPoint(ctx)
-    if (tool === "pencil") {
+    if (tool === "pencil" || tool === "mask") {
       setCanvasColour(ctx)
       const size = (currentTouch?.pressure || 1) / 4
       ctx.fillRect(
@@ -71,17 +74,16 @@ const DrawingCanvas = (
       )
     }
 
-    if (tool === "fill") {
+    if (tool === "fill" || tool === "mask fill") {
       const imageData = ctx.getImageData(0, 0, width, height)
-
       const data = flood_fill(
         ctx,
         imageData.data,
         Math.round(x),
         Math.round(y),
-        colour,
-        colour,
-        colour,
+        tool === "mask fill" ? 255 : colour,
+        tool === "mask fill" ? 0 : colour,
+        tool === "mask fill" ? 0 : colour,
         200,
         100
       )
@@ -94,7 +96,7 @@ const DrawingCanvas = (
 
   const drawLine = (x1, y1, x2, y2) => {
     const ctx = canvasRef.current.getContext("2d")
-    if (tool === "pencil") {
+    if (tool === "pencil" || tool === "mask") {
       setCanvasColour(ctx)
       ctx.lineWidth = currentTouch?.pressure || 1
       ctx.lineCap = "round"

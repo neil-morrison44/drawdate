@@ -18,7 +18,7 @@ A tool for creating 1 bit art for the PlayDate console
 
 - Allow exported images to be named
 - Better support for non-Apple Pencil styluses / screensizes
-- Add Masking tool to support the opacity channel (will allow creation of non-fullscreen assets)
+- ~~Add Masking tool to support the opacity channel (will allow creation of non-fullscreen assets)~~
 - Add Masking support to palettes (e.g. allow transparent pixels)
 - Add tool for doing dithering, similar to a "smudge" tool, will swap random pixels within the radius of your touch
 - Support the opening of images from outside DrawDate & provide some greyscale transformation options

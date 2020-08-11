@@ -21,11 +21,17 @@ const renderOutputImageData = (imageData, palette, paletteValues) => {
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const index = (x + y * width) * 4
-      const inputShade = data[index]
+      const inputShadeRed = data[index]
+      const inputShadeGreen = data[index + 1]
+
+      if (inputShadeRed > 128 && inputShadeGreen < 128) {
+        data[index + 3] = 0
+        continue
+      }
 
       const palettePattern =
-        paletteCache[inputShade] ||
-        (paletteCache[inputShade] = palette[closest(inputShade, paletteValues)])
+        paletteCache[inputShadeRed] ||
+        (paletteCache[inputShadeRed] = palette[closest(inputShadeRed, paletteValues)])
 
       let outputShade = 255
       const kernelXLength = palettePattern[0].length

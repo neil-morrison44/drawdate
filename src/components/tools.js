@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 
 const Tools = ({ onChangeTool, toolList, selectedTool }) => {
   return (
