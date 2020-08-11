@@ -4,6 +4,7 @@ import { readMetadata, writeMetadata } from "png-metadata"
 
 const Export = ({ onClose, palette, outputCanvasRef, drawingCanvasRef }) => {
   const [outputSrc, setOutputSrc] = useState(null)
+  const [filename, setFileName] = useState("")
 
   useEffect(() => {
     const ctx = outputCanvasRef.current.getContext("2d")
@@ -18,7 +19,6 @@ const Export = ({ onClose, palette, outputCanvasRef, drawingCanvasRef }) => {
           DrawingCanvas: drawingCanvasRef.current.toDataURL(),
         }
         const withMetaDataBuffer = writeMetadata(buffer, { ...metadata, tEXt })
-
         const blob = new Blob([withMetaDataBuffer], { type: "image/png" })
         setOutputSrc(URL.createObjectURL(blob))
       }
@@ -36,7 +36,17 @@ const Export = ({ onClose, palette, outputCanvasRef, drawingCanvasRef }) => {
       {outputSrc && (
         <Fragment>
           <img className="export__preview-image" width="400" height="240" src={outputSrc} />
-          <a className="export__download-link" download href={outputSrc}>
+          <input
+            type="text"
+            className="export__filename"
+            placeholder="filename.png"
+            value={filename}
+            onChange={({ target }) => setFileName(target.value)}
+            onBlur={() => {
+              if (filename && !filename.endsWith(".png")) setFileName(filename + ".png")
+            }}
+          ></input>
+          <a className="export__download-link" download={filename || true} href={outputSrc}>
             Download
           </a>
         </Fragment>
