@@ -1,5 +1,12 @@
 import React from "react"
-import { FaPencilAlt, FaFillDrip, FaEraser, FaMask } from "react-icons/fa"
+import {
+  FaPencilAlt,
+  FaFillDrip,
+  FaEraser,
+  FaMask,
+  FaRandom,
+  FaHandPointDown,
+} from "react-icons/fa"
 
 const TOOL_LIST = [
   {
@@ -15,6 +22,7 @@ const TOOL_LIST = [
     Icon: () => <FaEraser />,
   },
   { name: "mask fill", Icon: () => <FaMask /> },
+  { name: "smudge", Icon: () => <FaHandPointDown /> },
 ]
 
 const COLOUR_PALETTE = {

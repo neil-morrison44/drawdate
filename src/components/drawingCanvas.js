@@ -9,6 +9,7 @@ import React, {
 } from "react"
 import { flood_fill } from "wasm-flood-fill"
 import { ImplementContext, IMPLEMENT_OPTIONS } from "./implementContextProvider"
+import { pixelSwap } from "../tool/pixelSwap"
 
 const PRESSURE_FACTOR = 10
 const TOUCH_TYPE = "stylus"
@@ -74,6 +75,11 @@ const DrawingCanvas = (
       )
     }
 
+    if (tool === "smudge") {
+      const size = (currentTouch?.pressure || 1) * 4
+      ctx.putImageData(pixelSwap(ctx, x, y, size, 1), 0, 0)
+    }
+
     if (tool === "fill" || tool === "mask fill") {
       const imageData = ctx.getImageData(0, 0, width, height)
       const data = flood_fill(
@@ -85,7 +91,7 @@ const DrawingCanvas = (
         tool === "mask fill" ? 0 : colour,
         tool === "mask fill" ? 0 : colour,
         200,
-        100
+        64
       )
 
       ctx.putImageData(new ImageData(data, width, height), 0, 0)
@@ -106,6 +112,12 @@ const DrawingCanvas = (
       ctx.lineTo(x2, y2)
       ctx.stroke()
     }
+
+    if (tool === "smudge") {
+      const size = (currentTouch?.pressure || 1) * 4
+      ctx.putImageData(pixelSwap(ctx, x2, y2, size, 5), 0, 0)
+    }
+
     onUpdate(ctx)
   }
 
