@@ -9,6 +9,7 @@
     "input palette"
     "output tools";
   gap: 20px;
+  position: relative;
 }
 
 .app__options {
@@ -24,7 +25,8 @@
 .app__undo,
 .app__clear,
 .app__import,
-.app__export {
+.app__export,
+.app__grid {
   @include default-button;
   flex-grow: 1;
 }

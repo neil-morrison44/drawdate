@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, Fragment, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { readMetadata } from "png-metadata"
-import Palette from "./palette"
+import Palette from "../palette"
 
 const Import = ({ onClose, onImportPalette, onImportDrawingCanvas }) => {
   const [importedPalette, setImportedPalette] = useState(null)

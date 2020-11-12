@@ -13,8 +13,9 @@ import ChooseImplement from "./chooseImplement"
 import GithubLink from "./githubLink"
 
 const DrawingCanvas = React.lazy(() => import("./drawingCanvas"))
-const Export = React.lazy(() => import("./export"))
-const Import = React.lazy(() => import("./import"))
+const Export = React.lazy(() => import("./modals/export"))
+const Import = React.lazy(() => import("./modals/import"))
+const Grid = React.lazy(() => import("./modals/grid"))
 
 const outputImageWorker = new OutputImageWorker()
 
@@ -29,7 +30,7 @@ const App = () => {
   const [openModal, setOpenModal] = useState(null)
   const drawingCanvasRef = useRef()
   const outputCanvasRef = useRef()
-
+  const [gridState, setGridState] = useState({ enabled: false, x: 40, y: 40, image: null })
   const paletteKeys = Object.keys(palette)
 
   // slight risk that the `processImageData` that this memoizes and the real one will go out of sync
@@ -54,6 +55,12 @@ const App = () => {
             onSetUndoPoint={(ctx) => pushToUndoStack(ctx.getImageData(0, 0, 400, 240))}
           />
         </Suspense>
+        {gridState.enabled && (
+          <div
+            className="grid__overlay"
+            style={{ backgroundImage: `url(${gridState.image})` }}
+          ></div>
+        )}
         <OutputCanvas imageData={outputImageData} ref={outputCanvasRef} />
         <Tools
           onChangeTool={(tool) => setTool(tool)}
@@ -79,6 +86,9 @@ const App = () => {
           <button className="app__export" onClick={() => setOpenModal("export")}>
             Export
           </button>
+          <button className="app__grid" onClick={() => setOpenModal("grid")}>
+            Grid
+          </button>
           <ChooseImplement />
         </div>
 
@@ -99,6 +109,13 @@ const App = () => {
                 // pushToUndoStack(imageData)
                 setBaseImageData(imageData)
               }}
+            />
+          )}
+          {openModal === "grid" && (
+            <Grid
+              onClose={() => setOpenModal(null)}
+              {...gridState}
+              onUpdateGrid={(newGridState) => setGridState(newGridState)}
             />
           )}
         </Suspense>

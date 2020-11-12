@@ -1,0 +1,14 @@
+.grid {
+  @include modal();
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.grid__overlay {
+  grid-area: input;
+  pointer-events: none;
+  opacity: 0.1;
+  position: absolute;
+  width: 400px;
+  height: 240px;
+}
