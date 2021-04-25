@@ -36,6 +36,8 @@ void setup()
   Serial.begin(115200);
   Serial.setDebugOutput(true);
 
+  setupCamera();
+
   Serial.println("Hello");
 
   WiFi.begin(ssid, password);
@@ -54,10 +56,9 @@ void setup()
   // turn off red LED
   pinMode(33, OUTPUT);
   digitalWrite(33, LOW);
-  // digitalWrite(4, HIGH);
   displaySetup();
   setupHttpServer();
-  // setupCamera();
+  //
 }
 
 void loop()

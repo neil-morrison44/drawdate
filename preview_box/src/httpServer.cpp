@@ -1,14 +1,14 @@
 #include <ESPAsyncWebServer.h>
 #include <display.h>
-// #include "./camera.h"
+#include "./camera.h"
 
-AsyncWebServer server(80);
+static AsyncWebServer server(80);
 
-// void takeImageTask(void *parameter)
-// {
-//   takePictureAndUploadIt("hello.jpg");
-//   vTaskDelete(NULL);
-// }
+void takeImageTask(void *parameter)
+{
+  takePictureAndUploadIt("hello.jpg");
+  vTaskDelete(NULL);
+}
 
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
 {
@@ -31,14 +31,13 @@ void handleUpload(AsyncWebServerRequest *request, String filename, size_t index,
   if (final)
   {
     Serial.println("about to create task...");
-    // takePictureAndUploadIt("hello.jpg");
-    // xTaskCreate(
-    //     takeImageTask,
-    //     "takeImageTask",
-    //     10000,
-    //     NULL,
-    //     1,
-    //     NULL);
+    xTaskCreate(
+        takeImageTask,
+        "takeImageTask",
+        10000,
+        NULL,
+        1,
+        NULL);
   }
 }
 

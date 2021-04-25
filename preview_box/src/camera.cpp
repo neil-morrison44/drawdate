@@ -3,9 +3,6 @@
 #include <WiFi.h>
 #include "./secrets.h"
 
-// This project was tested with the AI Thinker Model, M5STACK PSRAM Model and M5STACK WITHOUT PSRAM
-#define CAMERA_MODEL_AI_THINKER
-
 #define PWDN_GPIO_NUM 32
 #define RESET_GPIO_NUM -1
 #define XCLK_GPIO_NUM 0
@@ -25,8 +22,6 @@
 #define PCLK_GPIO_NUM 22
 
 #define FLASH_GPIO_NUM 4
-
-WiFiClient client;
 
 void setupCamera()
 {
@@ -49,14 +44,14 @@ void setupCamera()
   config.pin_sscb_scl = SIOC_GPIO_NUM;
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
-  config.xclk_freq_hz = 20000000;
+  config.xclk_freq_hz = 10000000;
   config.pixel_format = PIXFORMAT_JPEG;
 
   if (psramFound())
   {
-    config.frame_size = FRAMESIZE_SVGA; // FRAMESIZE_UXGA;
+    config.frame_size = FRAMESIZE_SVGA; //FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
-    config.fb_count = 2;
+    config.fb_count = 1;
   }
   else
   {
@@ -64,33 +59,39 @@ void setupCamera()
     config.jpeg_quality = 12;
     config.fb_count = 1;
   }
-
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK)
   {
-    Serial.printf("Camera init failed with error 0x%x", err);
+    Serial.printf("\n Camera init failed with error 0x%x\n", err);
+    delay(1000);
+    // ESP.restart();
     return;
   }
 
   pinMode(FLASH_GPIO_NUM, OUTPUT);
 }
 
-void takePictureAndUploadIt(String filename)
+int takePictureAndUploadIt(String filename)
 {
+  // setupCamera();
   String getAll;
   String getBody;
+
+  Serial.println("\n Camera capture...");
 
   camera_fb_t *fb = NULL;
   fb = esp_camera_fb_get();
   if (!fb)
   {
-    Serial.println("Camera capture failed");
-    delay(1000);
-    ESP.restart();
-    return;
+    Serial.println("\n Camera capture failed");
+    // delay(1000);
+    // ESP.restart();
+    return -1;
   }
 
   Serial.println("Connecting to server: " + BUCKET_NAME);
+
+  WiFiClient client;
 
   if (client.connect(BUCKET_NAME.c_str(), 80))
   {
@@ -106,7 +107,7 @@ void takePictureAndUploadIt(String filename)
     client.println("Host: " + BUCKET_NAME);
     client.println("Content-Length: " + String(totalLen));
     client.println("Content-Type: multipart/form-data; boundary=FORM_BOUNDARY_HERE");
-    client.println("Referer: neil.today/drawdate");
+    // client.println("Referer: neil.today/drawdate");
     client.println();
     client.print(head);
 
@@ -128,6 +129,7 @@ void takePictureAndUploadIt(String filename)
         client.write(fbBuf, remainder);
       }
     }
+    Serial.println("Have written the data");
     client.print(tail);
 
     esp_camera_fb_return(fb);
@@ -140,7 +142,7 @@ void takePictureAndUploadIt(String filename)
     while ((startTimer + timeoutTimer) > millis())
     {
       Serial.print(".");
-      delay(100);
+      vTaskDelay(100);
       while (client.available())
       {
         char c = client.read();
@@ -178,4 +180,5 @@ void takePictureAndUploadIt(String filename)
   }
 
   Serial.println(getBody);
+  return 1;
 }

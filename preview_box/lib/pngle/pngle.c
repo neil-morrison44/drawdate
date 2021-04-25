@@ -41,8 +41,20 @@
 #define debug_printf(...) ((void)0)
 #endif
 
+void *mycalloc(size_t nelem, size_t elsize)
+{
+	void *p;
+
+	p = heap_caps_malloc(nelem * elsize, 1 << 10);
+	if (p == 0)
+		return (p);
+
+	bzero(p, nelem * elsize);
+	return (p);
+}
+
 #define PNGLE_ERROR(s) (pngle->error = (s), pngle->state = PNGLE_STATE_ERROR, -1)
-#define PNGLE_CALLOC(a, b, name) (debug_printf("[pngle] Allocating %zu bytes for %s\n", (size_t)(a) * (size_t)(b), (name)), calloc((size_t)(a), (size_t)(b)))
+#define PNGLE_CALLOC(a, b, name) (debug_printf("[pngle] Allocating %zu bytes for %s\n", (size_t)(a) * (size_t)(b), (name)), mycalloc((size_t)(a), (size_t)(b)))
 
 #define PNGLE_UNUSED(x) (void)(x)
 
@@ -750,8 +762,13 @@ static int pngle_handle_chunk(pngle_t *pngle, const uint8_t *buf, size_t len)
 
 static int pngle_feed_internal(pngle_t *pngle, const uint8_t *buf, size_t len)
 {
+	debug_printf("[pngle] An internal feed\n");
+
 	if (!pngle)
+	{
+		debug_printf("[pngle] But there's no pngle\n");
 		return -1;
+	}
 
 	switch (pngle->state)
 	{
@@ -939,10 +956,10 @@ static int pngle_feed_internal(pngle_t *pngle, const uint8_t *buf, size_t len)
 
 int pngle_feed(pngle_t *pngle, const void *buf, size_t len)
 {
-
+	debug_printf("[pngle] I'm feeding pngle\n");
 	size_t pos = 0;
 	pngle_state_t last_state = pngle->state;
-
+	debug_printf("[pngle] I've checked pngles last state: %d\n", last_state);
 	while (pos < len)
 	{
 		int r = pngle_feed_internal(pngle, (const uint8_t *)buf + pos, len - pos);
@@ -973,6 +990,7 @@ void pngle_set_init_callback(pngle_t *pngle, pngle_init_callback_t callback)
 {
 	if (!pngle)
 		return;
+	debug_printf("[pngle] this never actuall gets called, right?\n");
 	pngle->init_callback = callback;
 }
 

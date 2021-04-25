@@ -1,3 +1,3 @@
 void setupCamera();
 
-void takePictureAndUploadIt(String filename);
+int takePictureAndUploadIt(String filename);

@@ -11,62 +11,49 @@ Adafruit_SharpMem display(SHARP_SCK, SHARP_MOSI, SHARP_CS, 400, 240);
 #define BLACK 0
 #define WHITE 1
 
-String currentFilename = "none";
-uint8_t pngBuffer[1024 * 8];
-size_t imageSize = 0;
+String currentFilename;
+pngle_t *pngle = pngle_new();
 
 void onDraw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t rgba[4])
 {
   uint8_t r = rgba[0]; // 0 - 255
-  // Serial.println("Drawing one pixel");
   if (r < 128)
   {
     display.drawPixel(x, y, BLACK);
   }
-  else
-  {
-    display.drawPixel(x, y, WHITE);
-  }
-
-  // display.refresh();
-}
-
-void onInit(pngle_t *pngle, uint32_t w, uint32_t h)
-{
-  Serial.println("pngle init?");
-}
-
-void displayImageBuffer()
-{
-  Serial.println("Image due to be displayed");
-  pngle_t *pngle = pngle_new();
-
-  pngle_set_draw_callback(pngle, onDraw);
-  pngle_set_init_callback(pngle, onInit);
-  Serial.println();
-  Serial.printf("image size %d", imageSize);
-  Serial.println();
-  int fed = pngle_feed(pngle, pngBuffer, imageSize);
-  Serial.println(fed);
-  pngle_destroy(pngle);
-  display.refresh();
-  Serial.println("Image displayed");
 }
 
 void pushToPNGDisplayBuffer(String fileName, uint8_t *data, size_t index, size_t len, bool final)
 {
-  size_t i = 0;
-  while (i < len)
+
+  if (index == 0)
   {
-    pngBuffer[index + i] = data[i];
-    i++;
+    display.clearDisplay();
+    Serial.printf("\nFree Heap: %d\n", esp_get_free_heap_size());
+    pngle = pngle_new();
+    if (pngle)
+    {
+      Serial.println("I've got a pngle");
+      pngle_set_draw_callback(pngle, onDraw);
+    }
+    else
+    {
+      Serial.println("I've not got a pngle!!!");
+    }
   }
+
+  Serial.println(len);
+
+  int remainder = pngle_feed(pngle, data, len);
+  // might need to worry about the remainder but it doesn't seem like it
+  Serial.printf("\n Remainder: %d\n", remainder);
 
   if (final)
   {
-    imageSize = len + index;
+    // imageSize = len + index;
     Serial.println("Image loaded I think");
-    displayImageBuffer();
+    pngle_destroy(pngle);
+    display.refresh();
   }
 }
 
