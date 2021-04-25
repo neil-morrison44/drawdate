@@ -23,6 +23,9 @@
 
 #define FLASH_GPIO_NUM 4
 
+const int freq = 5000;
+const int ledChannel = LEDC_CHANNEL_6;
+
 void setupCamera()
 {
   camera_config_t config;
@@ -44,12 +47,12 @@ void setupCamera()
   config.pin_sscb_scl = SIOC_GPIO_NUM;
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
-  config.xclk_freq_hz = 10000000;
+  config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
 
   if (psramFound())
   {
-    config.frame_size = FRAMESIZE_SVGA; //FRAMESIZE_UXGA;
+    config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 1;
   }
@@ -68,7 +71,14 @@ void setupCamera()
     return;
   }
 
-  pinMode(FLASH_GPIO_NUM, OUTPUT);
+  // sensor_t *s = esp_camera_sensor_get();
+  // s->set_brightness(s, -2);
+  // s->set_exposure_ctrl(s, 1);
+  // s->set_ae_level(s, 2);
+
+  // pinMode(FLASH_GPIO_NUM, OUTPUT);
+  ledcSetup(ledChannel, freq, 8);
+  ledcAttachPin(FLASH_GPIO_NUM, ledChannel);
 }
 
 int takePictureAndUploadIt(String filename)
@@ -78,9 +88,11 @@ int takePictureAndUploadIt(String filename)
   String getBody;
 
   Serial.println("\n Camera capture...");
-
+  ledcWrite(ledChannel, 16);
+  vTaskDelay(50);
   camera_fb_t *fb = NULL;
   fb = esp_camera_fb_get();
+  ledcWrite(ledChannel, 0);
   if (!fb)
   {
     Serial.println("\n Camera capture failed");
@@ -96,19 +108,27 @@ int takePictureAndUploadIt(String filename)
   if (client.connect(BUCKET_NAME.c_str(), 80))
   {
     Serial.println("Connection successful!");
+
+    String keyHead = "--FORM_BOUNDARY_HERE\r\nContent-Disposition: form-data; name=\"key\";\r\n";
+    String keyTail = "${filename}";
+
     String head = "--FORM_BOUNDARY_HERE\r\nContent-Disposition: form-data; name=\"file\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
     String tail = "\r\n--FORM_BOUNDARY_HERE--\r\n";
 
     uint32_t imageLen = fb->len;
-    uint32_t extraLen = head.length() + tail.length();
+    uint32_t extraLen = head.length() + tail.length() + keyHead.length() + keyTail.length();
     uint32_t totalLen = imageLen + extraLen;
 
     client.println("POST / HTTP/1.1");
     client.println("Host: " + BUCKET_NAME);
     client.println("Content-Length: " + String(totalLen));
     client.println("Content-Type: multipart/form-data; boundary=FORM_BOUNDARY_HERE");
-    // client.println("Referer: neil.today/drawdate");
+    client.println("Referer: " + SECRET_REFERER);
     client.println();
+
+    client.println(keyHead);
+    client.println(keyTail);
+
     client.print(head);
 
     Serial.println("written head");
