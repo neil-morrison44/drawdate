@@ -64,7 +64,7 @@ void displaySetup(void)
   display.clearDisplay();
   display.setRotation(2);
 
-  Serial.println("display setup complete");
+  Serial.println("\ndisplay setup complete\n");
 
   display.fillRect(0, 0, 400, 240, BLACK);
   display.refresh();

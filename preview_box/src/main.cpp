@@ -49,6 +49,8 @@ void setup()
   Serial.println("");
   Serial.println("WiFi connected");
 
+  Serial.printf("\n CPU Clockspeed: %d MHz", ESP.getCpuFreqMHz());
+
   Serial.print("Preview Box Ready! Go to: http://");
   Serial.print(WiFi.localIP());
 

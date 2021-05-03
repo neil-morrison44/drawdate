@@ -23,6 +23,8 @@
 
 #define FLASH_GPIO_NUM 4
 
+#define FLASH_BRIGHTNESS 64
+
 const int freq = 5000;
 const int ledChannel = LEDC_CHANNEL_6;
 
@@ -88,7 +90,7 @@ int takePictureAndUploadIt(String filename)
   String getBody;
 
   Serial.println("\n Camera capture...");
-  ledcWrite(ledChannel, 16);
+  ledcWrite(ledChannel, FLASH_BRIGHTNESS);
   vTaskDelay(50);
   camera_fb_t *fb = NULL;
   fb = esp_camera_fb_get();
